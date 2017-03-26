@@ -19,7 +19,6 @@ export default function withFormSpree(ComponentToWrap,formSpreeEmail:string) {
 
 			if (window.fetch) {
 				// use Fetch API
-				
 				// Init header class
 				const headers = new Headers()
 				
