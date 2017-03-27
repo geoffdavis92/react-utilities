@@ -1,3 +1,4 @@
 # react-utilities ignores... 
 node_modules/ 
-demo/bundle.js
+demo/bundle.js 
+*.log
