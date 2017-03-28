@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,35 +6,124 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Visualizer = require("./Visualizer");
+
+var _Visualizer2 = _interopRequireDefault(_Visualizer);
+
+var _EntryForm = require("./EntryForm");
+
+var _EntryForm2 = _interopRequireDefault(_EntryForm);
+
+var _EntryList = require("./EntryList");
+
+var _EntryList2 = _interopRequireDefault(_EntryList);
+
+var _EntryExplorer = require("./EntryExplorer");
+
+var _EntryExplorer2 = _interopRequireDefault(_EntryExplorer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // MiniDash 
 
-var Component = function (_React$Component) {
-  _inherits(Component, _React$Component);
 
-  function Component() {
-    _classCallCheck(this, Component);
+var MiniDash = function (_Component) {
+  _inherits(MiniDash, _Component);
 
-    return _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).apply(this, arguments));
+  function MiniDash(props) {
+    _classCallCheck(this, MiniDash);
+
+    var _this = _possibleConstructorReturn(this, (MiniDash.__proto__ || Object.getPrototypeOf(MiniDash)).call(this, props));
+
+    _this.state = {
+      entries: _this.props.dataSource,
+      explorer: { selectedEntry: false }
+    };
+    _this.defaultXAxis = {
+      range: [0, 10],
+      label: "xAxis",
+      tickCount: 5,
+      tickFormat: function tickFormat(x) {
+        return x;
+      }
+    };
+    _this.defaultYAxis = {
+      range: [0, 10],
+      label: "yAxis",
+      tickCount: 5,
+      tickFormat: function tickFormat(y) {
+        return y;
+      }
+    };
+    _this.updateDashState = _this.updateDashState.bind(_this);
+    return _this;
   }
 
-  _createClass(Component, [{
-    key: 'render',
+  _createClass(MiniDash, [{
+    key: "updateDashState",
+    value: function updateDashState(stateKey, newValue) {
+      this.setState(_defineProperty({}, stateKey, newValue));
+    }
+  }, {
+    key: "render",
     value: function render() {
-      return _react2.default.createElement('div', null);
+      var defaultXAxis = this.defaultXAxis,
+          defaultYAxis = this.defaultYAxis,
+          props = this.props,
+          _state = this.state,
+          entries = _state.entries,
+          selectedEntry = _state.explorer.selectedEntry,
+          updateDashState = this.updateDashState;
+      var datasets = props.datasets,
+          xAxis = props.xAxis,
+          yAxis = props.yAxis;
+
+      return _react2.default.createElement(
+        "section",
+        { className: "MiniDash" },
+        _react2.default.createElement(
+          "article",
+          { className: "MiniDash_Visualizer" },
+          _react2.default.createElement(_Visualizer2.default, {
+            dataSource: entries,
+            datasets: datasets,
+            xAxis: xAxis ? xAxis : defaultXAxis,
+            yAxis: yAxis ? yAxis : defaultYAxis
+          })
+        ),
+        _react2.default.createElement(
+          "article",
+          { className: "MiniDash_Manager" },
+          _react2.default.createElement(
+            "div",
+            { className: "MiniDash_Manager_PanelLeft" },
+            _react2.default.createElement(_EntryList2.default, {
+              entries: entries,
+              selectEntryCallback: updateDashState
+            }),
+            _react2.default.createElement(_EntryForm2.default, { submissionCallback: updateDashState })
+          ),
+          _react2.default.createElement(
+            "div",
+            { className: "MiniDash_Manager_PanelRight" },
+            _react2.default.createElement(_EntryExplorer2.default, { dataSource: entries, selectedEntry: this.state.explorer.selectedEntry })
+          )
+        )
+      );
     }
   }]);
 
-  return Component;
-}(_react2.default.Component);
+  return MiniDash;
+}(_react.Component);
 
-exports.default = Component;
+exports.default = MiniDash;
