@@ -1,4 +1,22 @@
 {
+  "name": "@geoffdavis/react-utilities",
+  "version": "0.0.0",
+  "description": "Utility library for React",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geoffdavis92/react-utilities.git"
+  },
+  "author": "geoffdavis92",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geoffdavis92/react-utilities/issues"
+  },
+  "homepage": "https://github.com/geoffdavis92/react-utilities#readme",
   "scripts": {
     "webpack": "webpack --watch",
     "serve": "cd demo && httpster -p 32117",
