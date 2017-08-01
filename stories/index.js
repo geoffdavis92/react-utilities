@@ -44,12 +44,11 @@ const MenuItem = styled.li`
 	}
 `;
 
-const Button = styled.div`
+const DropdownContainer = styled.div`
 	border: 1px solid ${colors.gray};
-	cursor: pointer;
 	display: inline-block;
+	cursor: pointer;
 	font-family: 'Roboto';
-	padding: .5em 1em;
 	position: relative;
 	user-select: none;
 	&:after {
@@ -68,6 +67,13 @@ const Button = styled.div`
 	}
 `;
 
+const DropdownTrigger = styled.a`
+	color: ${props => props.focused ? 'red' : 'inherit'};
+	display: inline-block;
+	padding: .5em 1em;
+	text-decoration: none;
+`
+
 /**
  * <Menu>
 		{MenuText.map(item =>
@@ -76,7 +82,7 @@ const Button = styled.div`
 	</Menu>
  */
 
-const Expandable = styled.div`
+const MenuWrapper = styled.div`
 	border: ${({ isOpen }) =>
 		isOpen ? `1px solid ${colors.lightgray}` : "none"};
 	border-radius: 3px;
@@ -87,32 +93,83 @@ const Expandable = styled.div`
 	position: absolute;
 	top: calc(100% + 1.25em);
 	left: -1px;
-	width: calc(100% - 2em);
+	min-width: calc(100% - 2em);
 `;
+
+class Expandable extends Component {
+	render() {
+		const { children, ...rest} = this.props
+		return children(...rest)
+	}
+}
 
 class Dropdown extends Component {
 	constructor() {
 		super();
-		this.state = { MenuIsOpen: false };
+		this.state = { menuIsOpen: false, menuFocus: false, triggerFocus: false };
+		this.updateMenuState = this.updateMenuState.bind(this);
 		this.toggleMenu = this.toggleMenu.bind(this);
+		this.handleMenu = this.handleMenu.bind(this)
 	}
-	toggleMenu() {
-		this.setState(prevState => ({ MenuIsOpen: !prevState.MenuIsOpen }));
+	componentDidMount() {
+		window.addEventListener('click',e => {
+			if (e.target.tagName === 'HTML') {
+				this.setState(prevState => ({
+					menuIsOpen: false,
+					menuFocus: false
+				}))
+			}
+		})
+	}
+	updateMenuState({ menuIsOpen, menuFocus = true }) {
+		this.setState(prevState => ({ menuIsOpen: prevState.triggerFocus || (menuFocus ? true : false) , menuFocus: menuFocus || (prevState.triggerFocus) }));
+	}
+	toggleMenu(callback = (() => null)) {
+		this.setState(prevState => {
+			return ({ menuIsOpen: !prevState.menuIsOpen, menuFocus: true })
+		}, callback())
+	}
+	handleMenu({ keepOpen } = { keepOpen: false }) {
+		this.setState(prevState => ({
+			menuIsOpen: keepOpen,
+			menuFocus: keepOpen
+		}))
 	}
 	render() {
 		return (
-			<Button isOpen={this.state.MenuIsOpen} onClick={this.toggleMenu}>
+			<DropdownContainer isOpen={this.state.menuIsOpen && this.state.menuFocus}>
+				<DropdownTrigger href
+					onClick={e => { e.preventDefault(); this.toggleMenu()}}
+					onMouseEnter={()=> this.setState(prevState => ({ menuIsOpen: prevState.menuIsOpen && !prevState.menuFocus ? false : prevState.menuIsOpen }))}
+					onBlur={() => null /*this.setState(prevState => ({ menuFocus: false }))*/}
+				>
 				My Menu
-				<Expandable isOpen={this.state.MenuIsOpen}>
-					<ul style={{ padding: 0, listStyleType: "none" }}>
-						<li>Home</li>
-						<li>About</li>
-						<li>Contact</li>
-					</ul>
-				</Expandable>
-			</Button>
+				</DropdownTrigger>
+				<MenuWrapper 
+					data-dropdown="menuwrapper"
+					isOpen={this.state.menuIsOpen && this.state.menuFocus} 
+					onClick={() => null/*this.setState(prevState => ({ menuFocus: false }))*/}
+					onMouseEnter={()=> null/*this.setState(prevState => ({ menuFocus: true }))*/}
+					onMouseLeave={()=> this.setState(prevState => ({ menuFocus: false }))}>
+					<Expandable>
+						{(props) => this.props.children({ props, handleMenu: this.handleMenu })}
+					</Expandable>
+				</MenuWrapper>
+			</DropdownContainer>
 		);
 	}
 }
 
-storiesOf("Menu/Dropdown", module).add("default", () => <Dropdown />);
+const logRoute = route => callback => { console.log(route); callback() }
+
+/**
+ * onClick={e => this.setState(prevState => ({ menuFocus: true }))}
+onClick={e => this.setState(prevState => ({ menuFocus: true }))}
+onClick={e => this.setState(prevState => ({ menuFocus: true }))}
+**/
+storiesOf("Menu/Dropdown", module).add("default", () => <Dropdown>
+					{({ props, handleMenu }) => (<ul style={{ padding: 0, listStyleType: "none" }} {...props}>
+						<li><a href="#Home" onClick={() => logRoute('/home')(() => handleMenu({keepOpen: true}))}>Home</a></li>
+						<li><a href="#About" onClick={() => logRoute('/about')(handleMenu)}>About</a></li>
+						<li><a href="#Contact" onClick={() => logRoute('/contact')(handleMenu)}>Contact</a></li>
+					</ul>)}</Dropdown>);
