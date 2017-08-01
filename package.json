@@ -32,6 +32,7 @@
     "httpster": "^1.0.3",
     "react": "next",
     "react-dom": "next",
+    "styled-components": "next",
     "webpack": "^2.2.1",
     "webpack-dashboard": "^0.3.0",
     "webpack-dev-server": "^2.4.2"
