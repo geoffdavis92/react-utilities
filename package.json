@@ -17,27 +17,30 @@
   },
   "homepage": "https://github.com/geoffdavis92/react-utilities#readme",
   "scripts": {
-    "webpack": "webpack --watch",
-    "serve": "cd demo && httpster -p 32117",
     "demo": "webpack-dashboard -- webpack-dev-server --config ./webpack.config.js --inline --watch --history-api-fallback",
+    "serve": "cd demo && httpster -p 32117",
+    "webpack": "webpack --watch",
+    "prettier": "webpack --watch --config webpack-prettier.config.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "babel-core": "^6.24.0",
-    "babel-loader": "^6.4.1",
-    "babel-preset-es2015": "^6.24.0",
-    "babel-preset-react": "^6.23.0",
-    "flow-bin": "^0.42.0",
-    "httpster": "^1.0.3",
     "react": "next",
     "react-dom": "next",
-    "styled-components": "next",
-    "webpack": "^2.2.1",
-    "webpack-dashboard": "^0.3.0",
-    "webpack-dev-server": "^2.4.2"
+    "styled-components": "next"
   },
   "devDependencies": {
-    "@storybook/react": "^3.2.0"
+    "@storybook/react": "^3.2.0",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "flow-bin": "^0.51.1",
+    "httpster": "^1.0.3",
+    "prettier-webpack-plugin": "^0.2.1",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1"
   }
 }
