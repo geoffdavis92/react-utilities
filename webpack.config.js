@@ -1,26 +1,36 @@
-'use strict';
-
-// Prod check/uglify on prodbuild from http://stackoverflow.com/questions/25956937/how-to-build-minified-and-uncompressed-bundle-with-webpack
-
 const PROD = JSON.parse(process.env.PROD_ENV || '0');
 const path = require('path');
 const webpack = require('webpack');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const PrettierPlugin = require('prettier-webpack-plugin');
 
-module.exports = {
-    entry: './demo.js',
-    output: {
-    	path: path.join(__dirname,'/demo'),
-    	filename: 'bundle.js'
-    },
-    module: {
-    	loaders: [
-    		{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015&presets[]=react' }
-    	]
-    },
-    plugins: PROD ? [
-        new webpack.optimize.UglifyJsPlugin({
-          compress: { warnings: false }
-        })
-    ] : [ new DashboardPlugin() ]
+const config = {
+	entry: path.resolve(__dirname,'index.js'),
+	output: {
+		path: path.resolve(__dirname,'dist'),
+		filename: 'utilities.js'
+	},
+	resolve: {
+		enforceExtension: false,
+		extensions: ['.js','.jsx','.json']
+	},
+	module: {
+		rules: [
+			{ 
+				test: /\.js$/, 
+				exclude: /node_modules/, 
+				loader: 'babel-loader?presets[]=es2017&presets[]=react' 
+			}   
+		]
+	},
+	plugins: [
+		new PrettierPlugin({ tabWidth: 2, useTabs: true })//,
+		// new webpack.optimize.UglifyJsPlugin()
+	],
+	devServer: {
+		contentBase: path.join(__dirname,'dist/examples'),
+		compress: true,
+		port: 6007
+	}
 }
+
+module.exports = config
