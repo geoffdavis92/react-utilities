@@ -14,13 +14,7 @@
     "url": "https://github.com/geoffdavis92/react-utilities/issues"
   },
   "homepage": "https://github.com/geoffdavis92/react-utilities#readme",
-  "scripts": {
-    "webpack": "webpack --watch",
-    "serve": "cd demo && httpster -p 32117",
-    "demo": "webpack-dashboard -- webpack-dev-server --config ./webpack.config.js --inline --watch --history-api-fallback",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
-  },
+  "scripts": {},
   "dependencies": {},
   "devDependencies": {}
 }
